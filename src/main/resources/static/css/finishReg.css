@@ -1,0 +1,95 @@
+
+
+body{
+    background: white;
+}
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+}
+
+.header .logo {
+  font-size: 25px;
+  font-family: 'Sriracha', cursive;
+  color: #000;
+  text-decoration: none;
+  margin-left: 30px;
+}
+
+.nav-items {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: white;
+  margin-right: 20px;
+}
+
+.nav-items a {
+  text-decoration: none;
+  color: #000;
+  padding: 35px 20px;
+}
+
+
+
+
+
+
+ .title{
+   display: flex;
+   font-family: Arial, Helvetica, sans-serif;
+   font-size: 94px;
+   color: #323232;
+   margin-top: 200px;
+   margin-left: 160px;
+   margin-bottom: 10px;
+   text-align: left;
+ }
+
+ .title img {
+   width: 500px;
+   max-width: 30%;
+   height: auto;
+   margin-left: 200px
+
+ }
+
+ .title-text h2 {
+ font-family: Arial, Helvetica, sans-serif;
+ font-size: 68px;
+ color: black;
+ margin-top: 36px;
+ margin-left: 160px;
+ margin-bottom: 10px;
+ text-align: left;
+ }
+
+ .title-text p {
+   font-size: 34px;
+   color: #585858;
+   margin-left: 160px;
+ }
+
+
+ #button{
+ background-color: #95c2de ;
+ font-size: 20px;
+ font-family: 'Nunito Sans', sans-serif;
+ color: white;
+ padding: 10px;
+ border: 2px solid #95c2de ;
+ width: 140px;
+ height: 50px;
+ border-radius:16px;
+ margin-left: 10px;
+ margin-top: 66px;
+ text-align: center;
+ opacity: 0.7;
+ }
+ #link{
+ color:#ffffff;
+ }

@@ -1,0 +1,79 @@
+body {
+  background-color: white;
+}
+
+
+#link{
+color:#323232;
+}
+
+#linkB{
+color:white;
+}
+
+#name{
+font-size: 48px;
+color: #201317;
+text-align: center;
+}
+
+td{
+background: #CEF1FF;
+font-size: 28px;
+color: #030207;
+padding: 15px;
+margin: 15px;
+border: 2px solid #7D96A7;
+width: 800px;
+height: 30px;
+text-align: center;
+
+}
+
+table {
+  width: 80%;
+  border-collapse: collapse;
+  margin-left: 200px;
+
+}
+
+
+
+#title {
+    font-size: 24px;
+    text-align:center;
+    color: #01033a
+}
+
+#button{
+background-color: #306B90;
+font-size: 20px;
+font-family: 'Nunito Sans', sans-serif;
+color: white;
+padding: 10px;
+border: 2px solid #306B90;
+width: 140px;
+height: 50px;
+border-radius:16px;
+margin-left: 50px;
+margin-top: 36px;
+text-align: center;
+
+}
+
+#buttonAddBook{
+background-color: #306B90;
+font-size: 20px;
+font-family: 'Nunito Sans', sans-serif;
+color: white;
+padding: 10px;
+border: 2px solid #306B90;
+width: 140px;
+height: 80px;
+border-radius:16px;
+margin-left: 1400px;
+margin-top: 36px;
+text-align: center;
+opacity: 1;
+}
+
