@@ -2,12 +2,15 @@ package com.belhard.bookstoreBoot.service.impl;
 
 import com.belhard.bookstoreBoot.data.entity.User;
 import com.belhard.bookstoreBoot.data.repository.UserRepository;
+import com.belhard.bookstoreBoot.service.UserMapper;
 import com.belhard.bookstoreBoot.service.UserService;
 import com.belhard.bookstoreBoot.service.dto.UserDto;
 import com.belhard.bookstoreBoot.web.exeption.AppException;
 import com.belhard.bookstoreBoot.web.exeption.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.login.AccountNotFoundException;
@@ -20,44 +23,21 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-
-    private UserDto toDto(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setId(user.getId());
-        userDto.setName(user.getName());
-        userDto.setLastName(user.getLastName());
-        userDto.setEmail(user.getEmail());
-        userDto.setPassword(user.getPassword());
-        userDto.setRoleType(user.getRoleType());
-        return userDto;
-    }
-
-    private User toEntity(UserDto userDto) {
-        User user = new User();
-        user.setId(userDto.getId());
-        user.setName(userDto.getName());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
-        user.setRoleType(userDto.getRoleType());
-        return user;
-    }
+    private final UserMapper userMapper;
 
 
     @Override
     public UserDto getById(Long id) throws AppException {
-        Optional<User> optionalUser = userRepository.findById(id);
-        User user = optionalUser.orElseThrow(()->new AppException("None user with id" + id));
         log.debug("Get by id: id ={}",id);
-        return toDto(user);
+        return userRepository.findById(id)
+                .map(userMapper::toDto)
+                .orElseThrow(()->new AppException("None user with id" + id));
     }
 
     @Override
-    public List<UserDto> getAll() {
+    public Page<UserDto> getAll(Pageable pageable) {
         log.debug("Find all users");
-        List<UserDto> dtos = userRepository.findAll().stream().map(this::toDto).toList();
-        return dtos;
+        return userRepository.findAll(pageable).map(userMapper::toDto);
     }
 
     @Override
@@ -78,17 +58,19 @@ public class UserServiceImpl implements UserService {
         if (dto.getPassword() == null || dto.getPassword().isBlank()) {
             throw new BadRequestException("Password is required");
         } else {
-            User user = userRepository.save(toEntity(dto));
-            return toDto(user);
+            User toSave = userMapper.toEntity(dto);
+            User saved = userRepository.save(toSave);
+            return userMapper.toDto(saved);
         }
     }
 
 
     @Override
     public UserDto update(UserDto dto) {
-        User user = userRepository.save(toEntity(dto));
+        User toSave = userMapper.toEntity(dto);
+        User saved = userRepository.save(toSave);
         log.debug("update id ={}", dto.getId());
-        return toDto(user);
+        return userMapper.toDto(saved);
     }
 
     @Override
@@ -109,7 +91,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException();
         }
         log.debug("Try get login by email and password:{}",email,password);
-       return toDto(user);
+       return userMapper.toDto(user);
     }
 
 }

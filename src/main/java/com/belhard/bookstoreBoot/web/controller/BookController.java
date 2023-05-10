@@ -5,11 +5,12 @@ import com.belhard.bookstoreBoot.service.BookService;
 import com.belhard.bookstoreBoot.service.dto.BookDto;
 import com.belhard.bookstoreBoot.web.exeption.AppException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller()
 @RequestMapping("/books")
@@ -30,9 +31,16 @@ public class BookController {
     }
 
     @GetMapping("/getAll")
-    public String getAll (Model model){
-        List<BookDto> books = bookService.getAll();
-        model.addAttribute("books", books);
+    public String getAll (Model model, @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size){
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
+        page = page == null ? 0 : page;
+        size = size == null ? 5 : size;
+        PageRequest pageable = PageRequest.of(page, size, sort);
+        Page<BookDto> books = bookService.getAll(pageable);
+        model.addAttribute("books", books.toList());
+        model.addAttribute("current", books.getNumber());
+        model.addAttribute("total", books.getTotalPages());
+        model.addAttribute("size", books.getSize());
         return "books";
     }
 

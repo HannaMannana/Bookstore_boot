@@ -9,7 +9,9 @@
      <button id="button"><a id="linkB" href="/">Back</a></button>
      <button id="buttonAddBook"><a id="linkB" href="create">Add new book</a></button>
         <h1 id="name">Our Books</h1>
-
+        <a href="/books/getAll?page=${current - 1}&size=${size}">Prev</a>
+        <p>Page: ${current + 1} of ${total}</p>
+        <a href="/books/getAll?page=${current + 1}&size=${size}">Next</a>
             <table>
                 <br>
                   <tr>

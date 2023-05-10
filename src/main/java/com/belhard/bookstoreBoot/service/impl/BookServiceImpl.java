@@ -2,17 +2,18 @@ package com.belhard.bookstoreBoot.service.impl;
 
 import com.belhard.bookstoreBoot.data.entity.Book;
 import com.belhard.bookstoreBoot.data.repository.BookRepository;
+import com.belhard.bookstoreBoot.service.BookMapper;
 import com.belhard.bookstoreBoot.service.BookService;
 import com.belhard.bookstoreBoot.service.dto.BookDto;
 import com.belhard.bookstoreBoot.web.exeption.AppException;
 import com.belhard.bookstoreBoot.web.exeption.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Log4j2
@@ -20,50 +21,20 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
-
-    private BookDto toDto(Book book) {
-        BookDto bookDto = new BookDto();
-        bookDto.setId(book.getId());
-        bookDto.setBookName(book.getBookName());
-        bookDto.setIsbn(book.getIsbn());
-        bookDto.setAuthor(book.getAuthor());
-        bookDto.setPrice(book.getPrice());
-        bookDto.setNumberOfPages(book.getNumberOfPages());
-        bookDto.setYearOfPublication(book.getYearOfPublication());
-        bookDto.setCoverType(book.getCoverType());
-        return bookDto;
-    }
-
-    public Book toEntity(BookDto bookDto) {
-        Book book = new Book();
-        book.setId(bookDto.getId());
-        book.setBookName(bookDto.getBookName());
-        book.setIsbn(bookDto.getIsbn());
-        book.setAuthor(bookDto.getAuthor());
-        book.setPrice(bookDto.getPrice());
-        book.setNumberOfPages(bookDto.getNumberOfPages());
-        book.setYearOfPublication(bookDto.getYearOfPublication());
-        book.setCoverType(bookDto.getCoverType());
-        return book;
-    }
+    private final BookMapper bookMapper;
 
     @Override
     public BookDto getById(Long id) throws AppException {
         log.debug("Get by id: id ={}",id);
-        return toDto(bookRepository.findById(id).orElseThrow(()-> new AppException("None book with id" + id)));
+        return bookRepository.findById(id)
+                .map(bookMapper::toDto)
+                .orElseThrow(()-> new AppException("None book with id" + id));
     }
 
     @Override
-    public List<BookDto> getAll() {
+    public Page<BookDto> getAll(Pageable pageable) {
         log.debug("Find all books");
-        List<Book> books = bookRepository.findAll();
-
-        List<BookDto> dtos = new ArrayList<>();
-        for (Book book : books) {
-            BookDto dto = toDto(book);
-            dtos.add(dto);
-        }
-        return dtos;
+        return bookRepository.findAll(pageable).map(bookMapper::toDto);
     }
 
     @Override
@@ -84,17 +55,19 @@ public class BookServiceImpl implements BookService {
         if (num.compareTo(num2) <=0) {
             throw new BadRequestException("Price is required");
         } else {
-            Book book = bookRepository.save(toEntity(dto));
+            Book toSave = bookMapper.toEntity(dto);
+            Book saved = bookRepository.save(toSave);
             log.debug("create: new BookDto ={}",dto);
-            return toDto(book);
+            return bookMapper.toDto(saved);
         }
     }
 
     @Override
     public BookDto update(BookDto dto) {
-        Book book = bookRepository.save(toEntity(dto));
+        Book toSave = bookMapper.toEntity(dto);
+        Book saved = bookRepository.save(toSave);
         log.debug("update id ={}",dto.getId());
-        return toDto(book);
+        return bookMapper.toDto(saved);
     }
 
     @Override
