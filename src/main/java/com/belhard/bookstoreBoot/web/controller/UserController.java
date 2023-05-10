@@ -6,13 +6,12 @@ import com.belhard.bookstoreBoot.web.exeption.AppException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller("user")
+@Controller()
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
@@ -35,7 +34,7 @@ public class UserController {
         size = size == null ? 5 : size;
         PageRequest pageable = PageRequest.of(page, size, sort);
         Page<UserDto> users = userService.getAll(pageable);
-        model.addAttribute("users", users);
+        model.addAttribute("users", users.toList());
         model.addAttribute("current", users.getNumber());
         model.addAttribute("total", users.getTotalPages());
         model.addAttribute("size", users.getSize());

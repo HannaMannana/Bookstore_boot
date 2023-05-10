@@ -9,9 +9,11 @@
     <body>
     <button id="button"><a id="linkB" href="/">Back</a></button>
         <h1 id="name">Our Users</h1>
- <a href="/users/getAll?page=${current - 1}&size=${size}">Prev</a>
-         <p>Page: ${current + 1} of ${total}</p>
-         <a href="/users/getAll?page=${current + 1}&size=${size}">Next</a>
+         <div class="container-buttons">
+               <button id="buttonPage"><a id="linkB" href="/users/getAll?page=${current - 1}&size=${size}">Previous</a></button>
+                <p id="text">Page: ${current + 1} of ${total}</p>
+               <button id="buttonPage"><a id="linkB" href="/users/getAll?page=${current + 1}&size=${size}">Next</a></button>
+               </div>
             <table>
                 <br>
                     <tr>
