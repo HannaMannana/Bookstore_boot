@@ -53,8 +53,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto create(OrderDto dto) {
         dto.setStatus(Order.Status.PENDING);
-        Optional<Order> optionalOrder = orderRepository.create(toEntity(dto));
-        Order order = optionalOrder.orElseThrow(() -> new RuntimeException("Order didn't create"));
+        Order order = orderRepository.save(toEntity(dto));
         log.debug("create: new Order ={}", dto);
         return toDto(order);
 
@@ -62,20 +61,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto update(OrderDto dto) {
-        Optional<Order> opOrder = orderRepository.update(toEntity(dto));
-        Order order = opOrder.orElseThrow(() -> new RuntimeException("Id is required"));
+        Order order = orderRepository.save(toEntity(dto));
         log.debug("update id ={}",dto.getId());
         return toDto(order);
     }
 
     @Override
-    public boolean delete(Long id) {
-        boolean isDeleted = orderRepository.delete(id);
-        if (!isDeleted) {
-            return false;
-        } else {
-            log.debug("delete by id ={}",id);
-            return true;
+    public void delete(Long id) {
+        if (!orderRepository.existsById(id)) {
+            throw new RuntimeException("No order with id:" + id);
         }
+        orderRepository.deleteById(id);
     }
 }

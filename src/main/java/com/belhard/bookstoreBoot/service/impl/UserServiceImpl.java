@@ -78,9 +78,7 @@ public class UserServiceImpl implements UserService {
         if (dto.getPassword() == null || dto.getPassword().isBlank()) {
             throw new BadRequestException("Password is required");
         } else {
-            Optional<User> opUser = userRepository.save(toEntity(dto));
-
-            User user = opUser.orElseThrow(() -> new RuntimeException("Id is required"));
+            User user = userRepository.save(toEntity(dto));
             return toDto(user);
         }
     }
@@ -88,21 +86,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto update(UserDto dto) {
-        Optional<User> optionalUser = userRepository.update(toEntity(dto));
-        User user = optionalUser.orElseThrow(() -> new RuntimeException("Id is required"));
+        User user = userRepository.save(toEntity(dto));
         log.debug("update id ={}", dto.getId());
         return toDto(user);
     }
 
     @Override
-    public boolean delete(Long id) {
-        boolean isDeleted = userRepository.delete(id);
-        if (!isDeleted) {
-            return false;
-        } else {
-            log.debug("delete by id ={}",id);
-            return true;
+    public void delete(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("No user with id:" + id);
         }
+        userRepository.deleteById(id);
     }
 
 

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Log4j2
@@ -85,8 +84,7 @@ public class BookServiceImpl implements BookService {
         if (num.compareTo(num2) <=0) {
             throw new BadRequestException("Price is required");
         } else {
-            Optional<Book> optBook = bookRepository.save(toEntity(dto));
-            Book book = optBook.orElseThrow(() -> new RuntimeException("Book didn't create"));
+            Book book = bookRepository.save(toEntity(dto));
             log.debug("create: new BookDto ={}",dto);
             return toDto(book);
         }
@@ -94,21 +92,17 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto update(BookDto dto) {
-        Optional<Book> optBook = bookRepository.update(toEntity(dto));
-        Book book = optBook.orElseThrow(() -> new RuntimeException("Id is required"));
+        Book book = bookRepository.save(toEntity(dto));
         log.debug("update id ={}",dto.getId());
         return toDto(book);
     }
 
     @Override
-    public boolean delete(Long id) {
-        boolean isDeleted = bookRepository.delete(id);
-        if (!isDeleted) {
-            return false;
-        } else {
-            log.debug("delete by id ={}",id);
-            return true;
+    public void delete(Long id) {
+        if (!bookRepository.existsById(id)) {
+            throw new RuntimeException("No book with id:" + id);
         }
+        bookRepository.deleteById(id);
     }
 
 //    public BigDecimal getSumBooksByAuthor(String author) {

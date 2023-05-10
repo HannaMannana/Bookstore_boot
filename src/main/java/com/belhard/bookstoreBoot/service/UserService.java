@@ -16,7 +16,7 @@ public interface UserService {
 
     UserDto update( UserDto dto);
 
-    boolean delete(Long id);
+    void delete(Long id);
 
     UserDto login (String email, String password) throws AccountNotFoundException;
 }

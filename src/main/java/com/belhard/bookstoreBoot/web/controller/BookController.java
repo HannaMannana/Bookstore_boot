@@ -57,7 +57,7 @@ public class BookController {
     @PostMapping("/update/{id}")
     public String updateBook(@ModelAttribute BookDto book){
         bookService.update(book);
-        return "book";
+        return "books";
     }
 
     @PostMapping("/delete/{id}")
