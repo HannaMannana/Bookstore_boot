@@ -102,12 +102,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto login(String email, String password) throws AccountNotFoundException {
-        User user = userRepository.findAll().stream()
-                .filter(u -> u.getEmail().equals(email) && u.getPassword().equals(password))
-                .findFirst()
-                .orElseThrow(() -> new AccountNotFoundException("Wrong login or password"));
+        Optional <User> userOpt = userRepository.findByEmail(email);
+        User user = userOpt.orElseThrow(() -> new RuntimeException("Id is required"));
+        if (!password.equals(user.getPassword())){
+            log.error("None user with password: {}", password);
+            throw new RuntimeException();
+        }
         log.debug("Try get login by email and password:{}",email,password);
-        return toDto(user);
+       return toDto(user);
     }
 
 }
