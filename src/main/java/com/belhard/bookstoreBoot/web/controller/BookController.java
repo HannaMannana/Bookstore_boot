@@ -33,12 +33,12 @@ public class BookController {
     @GetMapping("/getAll")
     public String getAll (Model model, @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size){
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
-        page = page == null ? 0 : page;
+        page = page == null ? 1 : page;
         size = size == null ? 5 : size;
-        PageRequest pageable = PageRequest.of(page, size, sort);
+        PageRequest pageable = PageRequest.of(page - 1, size, sort);
         Page<BookDto> books = bookService.getAll(pageable);
         model.addAttribute("books", books.toList());
-        model.addAttribute("current", books.getNumber());
+        model.addAttribute("current", books.getNumber() +1);
         model.addAttribute("total", books.getTotalPages());
         model.addAttribute("size", books.getSize());
         return "books";

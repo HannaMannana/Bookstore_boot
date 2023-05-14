@@ -30,12 +30,12 @@ public class UserController {
     @GetMapping("/getAll")
     public String getAll (Model model, @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size){
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
-        page = page == null ? 0 : page;
+        page = page == null ? 1 : page;
         size = size == null ? 5 : size;
-        PageRequest pageable = PageRequest.of(page, size, sort);
+        PageRequest pageable = PageRequest.of(page - 1, size, sort);
         Page<UserDto> users = userService.getAll(pageable);
         model.addAttribute("users", users.toList());
-        model.addAttribute("current", users.getNumber());
+        model.addAttribute("current", users.getNumber() + 1);
         model.addAttribute("total", users.getTotalPages());
         model.addAttribute("size", users.getSize());
         return "users";
