@@ -13,5 +13,5 @@ public interface OrderService {
 
     OrderDto update( OrderDto dto);
 
-    boolean delete(Long id);
+    void delete(Long id);
 }
